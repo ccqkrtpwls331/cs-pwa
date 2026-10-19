@@ -5,7 +5,6 @@ let currentIndex = 0;
 let isWrongMode = false;
 
 const weekFilter = document.getElementById('weekFilter');
-const subTopicFilter = document.getElementById('subTopicFilter');
 const modeAll = document.getElementById('modeAll');
 const modeWrong = document.getElementById('modeWrong');
 const wrongCountEl = document.getElementById('wrongCount');
@@ -23,32 +22,13 @@ function initFilters() {
     opt.textContent = sub;
     weekFilter.appendChild(opt);
   });
-  updateSubTopics();
-}
-
-function updateSubTopics() {
-  const selectedSubject = weekFilter.value;
-  
-  // "전체 세부단원" 옵션을 없애고 드롭다운을 깨끗하게 비웁니다.
-  subTopicFilter.innerHTML = ''; 
-
-  const base = selectedSubject === 'all' ? QUESTIONS_DATA : QUESTIONS_DATA.filter(q => q.subject === selectedSubject);
-  const subTopics = [...new Set(base.map(q => q.subTopic))];
-  
-  subTopics.forEach(st => {
-    const opt = document.createElement('option');
-    opt.value = st;
-    opt.textContent = st;
-    subTopicFilter.appendChild(opt);
-  });
 }
 
 function applyFilter() {
   const sub = weekFilter.value;
-  const topic = subTopicFilter.value;
   filteredList = QUESTIONS_DATA.filter(q => {
+    // 세부단원 필터링 로직 제거, 주차와 오답모드만 체크
     if (sub !== 'all' && q.subject !== sub) return false;
-    if (topic !== 'all' && q.subTopic !== topic) return false;
     if (isWrongMode && !state.wrongIds.includes(q.id)) return false;
     return true;
   });
@@ -78,6 +58,7 @@ function renderQuestion() {
 
   const item = filteredList[currentIndex];
   progEl.textContent = `${currentIndex + 1} / ${filteredList.length}`;
+  // 화면 배지에는 주차와 세부단원을 여전히 표시하여 현재 무슨 문제인지 알 수 있게 함
   badgeEl.textContent = `${item.subject} > ${item.subTopic}`;
   qEl.textContent = `Q. ${item.question}`;
   optEl.innerHTML = '';
@@ -116,8 +97,8 @@ function checkAnswer(item, selectedIdx) {
   renderQuestion();
 }
 
-weekFilter.onchange = () => { updateSubTopics(); applyFilter(); };
-subTopicFilter.onchange = applyFilter;
+// 주차 필터 변경 시 바로 문제 적용
+weekFilter.onchange = () => { applyFilter(); };
 modeAll.onclick = () => { isWrongMode = false; modeAll.classList.add('active'); modeWrong.classList.remove('active'); applyFilter(); };
 modeWrong.onclick = () => { isWrongMode = true; modeWrong.classList.add('active'); modeAll.classList.remove('active'); applyFilter(); };
 document.getElementById('prevBtn').onclick = () => { if (currentIndex > 0) { currentIndex--; renderQuestion(); } };
