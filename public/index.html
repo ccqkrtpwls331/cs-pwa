@@ -36,8 +36,8 @@
   </header>
 
   <div class="controls">
-    <select id="weekFilter"><option value="all">전체 주차 (Subject)</option></select>
-    <select id="subTopicFilter"><option value="all">전체 세부단원</option></select>
+    <!-- 두 번째 콤보박스를 삭제하고, 이 콤보박스가 윗줄 전체를 차지하도록 grid-column 속성 추가 -->
+    <select id="weekFilter" style="grid-column: 1 / -1;"><option value="all">전체 주차 (Subject)</option></select>
     <button id="modeAll" class="active">전체 문제</button>
     <button id="modeWrong">오답 노트 (<span id="wrongCount">0</span>)</button>
   </div>
