@@ -28,9 +28,13 @@ function initFilters() {
 
 function updateSubTopics() {
   const selectedSubject = weekFilter.value;
-  subTopicFilter.innerHTML = '<option value="all">전체 세부단원</option>';
+  
+  // "전체 세부단원" 옵션을 없애고 드롭다운을 깨끗하게 비웁니다.
+  subTopicFilter.innerHTML = ''; 
+
   const base = selectedSubject === 'all' ? QUESTIONS_DATA : QUESTIONS_DATA.filter(q => q.subject === selectedSubject);
   const subTopics = [...new Set(base.map(q => q.subTopic))];
+  
   subTopics.forEach(st => {
     const opt = document.createElement('option');
     opt.value = st;
